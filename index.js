@@ -9,14 +9,14 @@ function getRandomInt(max) {
 
 function getTest(req, res) {
     if (getRandomInt(2) === 0) {
-        res.send("Hello World!");
+        res.send("Hello World 2!");
     } else {
         res.status(500).send("error");
         console.log('error', countError++);
     }
 }
 
-app.get("/", (req, res) => res.send("Hello World!"));
+app.get("/", (req, res) => res.send("Hello World 3!"));
 
 app.get("/test", getTest);
 
