@@ -124,13 +124,13 @@ spec:
         subset: canary
         port:
           number: 80
-      weight: 50
+      weight: 90
     - destination:
         host: node-http-test
         subset: prod
         port:
           number: 80
-      weight: 50
+      weight: 10
   - match:
     - uri:
         prefix: /
