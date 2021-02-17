@@ -1,0 +1,6 @@
+.idea/
+node_modules/
+.vscode/
+model.temp.python.js
+model.temp.js
+model.temp.python.test.js

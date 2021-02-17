@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-http-test-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-http-test
+      version: prod
+  template:
+    metadata:
+      labels:
+        app: node-http-test
+        version: prod
+    spec:
+      containers:
+      - name: node-http-test
+        image: fabiojapa/node-http-test:1.0.1
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          timeoutSeconds: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          timeoutSeconds: 3
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "16Mi"
+            cpu: "20m"
+          limits:
+            memory: "32Mi"
+            cpu: "50m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-http-test
+  labels:
+    app: node-http-test
+    version: prod
+spec:
+  selector:
+    app: node-http-test
+    version: prod
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: node-http-test-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "sakanaryistio.io"
+    - "node-http-test.default.svc.cluster.local"
+    
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: node-http-test-ext
+spec:
+  hosts:
+  - "sakanaryistio.io"
+  gateways:
+  - node-http-test-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: node-http-test
+        subset: prod
+        port:
+          number: 80
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: node-http-test
+spec:
+  hosts:
+  - "node-http-test"
+  - "node-http-test.default.svc.cluster.local"
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: node-http-test
+        subset: prod
+        port:
+          number: 80
+--- 
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: node-http-test
+spec:
+  host: node-http-test
+  subsets:
+  - name: prod
+    labels:
+      version: prod
