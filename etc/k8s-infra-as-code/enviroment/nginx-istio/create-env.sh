@@ -15,6 +15,8 @@ kubectl create clusterrolebinding cluster-admin-binding \
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.44.0/deploy/static/provider/cloud/deploy.yaml
 
+kubectl get svc -n ingress-nginx
+
 ## https://istio.io/latest/docs/setup/getting-started/
 
 curl -L https://istio.io/downloadIstio | sh -
@@ -33,6 +35,11 @@ kubectl rollout status deployment/kiali -n istio-system
 
 istioctl dashboard kiali
 
+kubectl get svc -n istio-system
+
+
+
+
 
 
 kubectl apply -f etc/k8s/simple/canary.yaml
@@ -40,7 +47,7 @@ kubectl apply -f etc/k8s/simple/canary.yaml
 kubectl apply -f etc/k8s/nginx/prod/app.yml
 kubectl apply -f etc/k8s/nginx/canary/app.yml
 
-kubectl get svc -n ingress-nginx
+
 
 
 

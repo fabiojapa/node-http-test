@@ -26,11 +26,10 @@ kubectl rollout status deployment/kiali -n istio-system
 
 istioctl dashboard kiali
 
+kubectl get svc -n istio-system
 
 
 
 kubectl apply -f etc/k8s/simple/canary.yaml
 
 kubectl apply -f etc/k8s/istio/prod/app.yml
-
-kubectl get svc -n istio-system
