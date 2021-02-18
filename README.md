@@ -47,3 +47,4 @@ $ for i in $(seq 1 10); do curl -s -H "country: MX" --resolve sakanary.io:80:34.
 3. https://v2-1.docs.kubesphere.io/docs/quick-start/ingress-canary/ 
 
 ** Istio with nginx? https://discuss.istio.io/t/istio-without-gateway-with-nginx-ingress/593
+
