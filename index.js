@@ -16,7 +16,7 @@ function getTest(req, res) {
     }
 }
 
-app.get("/", (req, res) => res.send("Hello World 3!"));
+app.get("/", (req, res) => res.send("Hello World Get 4.0!"));
 
 app.get("/test", getTest);
 
