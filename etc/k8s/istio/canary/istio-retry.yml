@@ -1,26 +1,27 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: node-http-test-ext
+  name: node-http-test-canary-ext
 spec:
   hosts:
   - "sakanaryistio.io"
   gateways:
-  - node-http-test-gateway
+  - node-http-test-canary-gateway
   http:
   - match:
-    - uri:
-        prefix: /
+    - headers:
+        country:
+          exact: MX
     route:
     - destination:
-        host: node-http-test
-        subset: prod
+        host: node-http-test-canary
+        subset: canary
         port:
           number: 80
     retries:
       attempts: 3
       perTryTimeout: 2s
-
+      retryOn: "5xx"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -32,14 +33,24 @@ spec:
   - "node-http-test.default.svc.cluster.local"
   http:
   - match:
+    - headers:
+        country:
+          exact: MX
+    route:
+    - destination:
+        host: node-http-test-canary
+        subset: canary
+        port:
+          number: 80
+  - match:
     - uri:
         prefix: /
     route:
     - destination:
         host: node-http-test
-        subset: prod
         port:
           number: 80
     retries:
       attempts: 3
       perTryTimeout: 2s
+      retryOn: "5xx"

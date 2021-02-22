@@ -1,0 +1,63 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: node-http-test-canary-ext
+spec:
+  hosts:
+  - "sakanaryistio.io"
+  gateways:
+  - node-http-test-canary-gateway
+  http:
+  - match:
+    - headers:
+        country:
+          exact: MX
+    route:
+    - destination:
+        host: node-http-test-canary
+        subset: canary
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: node-http-test
+spec:
+  hosts:
+  - "node-http-test"
+  - "node-http-test.default.svc.cluster.local"
+  http:
+  - match:
+    - headers:
+        country:
+          exact: MX
+    route:
+    - destination:
+        host: node-http-test-canary
+        subset: canary
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: node-http-test
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: node-http-test-canary
+spec:
+  host: node-http-test-canary
+  subsets:
+  - name: canary
+    labels:
+      version: canary
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 2
