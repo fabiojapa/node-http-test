@@ -1,0 +1,45 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: node-http-test-ext
+spec:
+  hosts:
+  - "sakanaryistio.io"
+  gateways:
+  - node-http-test-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: node-http-test
+        subset: prod
+        port:
+          number: 80
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: node-http-test
+spec:
+  hosts:
+  - "node-http-test"
+  - "node-http-test.default.svc.cluster.local"
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: node-http-test
+        subset: prod
+        port:
+          number: 80
+    retries:
+      attempts: 3
+      perTryTimeout: 2s

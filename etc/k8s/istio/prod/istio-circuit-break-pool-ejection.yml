@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: node-http-test
+spec:
+  host: node-http-test
+  subsets:
+  - name: prod
+    labels:
+      version: prod
+  trafficPolicy:
+    outlierDetection:
+      consecutiveErrors: 1
+      interval: 5s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 100

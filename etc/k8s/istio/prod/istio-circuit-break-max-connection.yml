@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: node-http-test
+spec:
+  host: node-http-test
+  subsets:
+  - name: prod
+    labels:
+      version: prod
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 2
