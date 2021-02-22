@@ -9,7 +9,7 @@ function getRandomInt(max) {
 }
 
 function getTest(req, res) {
-    if (getRandomInt(2) === 0) {
+    if (getRandomInt(5) === 0) {
         res.send("Hello World 2!");
         console.log('ok', countOk++);
     } else {

@@ -30,21 +30,11 @@ spec:
   - "node-http-test.default.svc.cluster.local"
   http:
   - match:
-    - headers:
-        country:
-          exact: MX
-    route:
-    - destination:
-        host: node-http-test-canary
-        subset: canary
-        port:
-          number: 80
-  - match:
     - uri:
         prefix: /
     route:
     - destination:
-        host: node-http-test
+        host: node-http-test-canary
         port:
           number: 80
 ---
@@ -60,5 +50,8 @@ spec:
       version: canary
   trafficPolicy:
     connectionPool:
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
       tcp:
-        maxConnections: 2
+        maxConnections: 1
