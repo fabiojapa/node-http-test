@@ -20,7 +20,7 @@ spec:
         port:
           number: 80
     retries:
-      attempts: 3
+      attempts: 7
       perTryTimeout: 2s
       retryOn: "5xx"
       # https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
@@ -45,7 +45,7 @@ spec:
         port:
           number: 80
     retries:
-      attempts: 3
+      attempts: 7
       perTryTimeout: 2s
       retryOn: "5xx"
       # https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on

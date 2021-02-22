@@ -20,7 +20,6 @@ function getTest(req, res) {
 
 app.get("/", (req, res) => {
     res.send("Hello World Get 4.0!");
-    console.log('ok', countOk++);
 });
 
 app.get("/test", getTest);

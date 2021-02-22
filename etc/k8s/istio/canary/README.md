@@ -6,12 +6,17 @@
 kubectl apply -f etc/k8s/istio/canary/istio-retry.yml
 ```
 
-2. Chamar pelo postman 
+1. Escalar
+```sh
+kubectl scale deployment/node-http-test-deployment-canary --replicas 2
+```
+
+3. Chamar pelo postman 
 ```sh
 curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX'
 ```
 
-3. ref: 
+4. ref: 
    
     https://istio.io/latest/docs/concepts/traffic-management/#retries
     https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
