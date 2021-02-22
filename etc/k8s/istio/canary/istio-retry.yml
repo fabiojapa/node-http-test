@@ -1,3 +1,4 @@
+# https://istio.io/latest/docs/concepts/traffic-management/#retries
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -22,6 +23,7 @@ spec:
       attempts: 3
       perTryTimeout: 2s
       retryOn: "5xx"
+      # https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -42,6 +44,11 @@ spec:
         subset: canary
         port:
           number: 80
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+      retryOn: "5xx"
+      # https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
   - match:
     - uri:
         prefix: /
@@ -50,7 +57,3 @@ spec:
         host: node-http-test
         port:
           number: 80
-    retries:
-      attempts: 3
-      perTryTimeout: 2s
-      retryOn: "5xx"
