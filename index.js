@@ -11,7 +11,7 @@ function getTest(req, res) {
     if (getRandomInt(2) === 0) {
         res.send("Hello World 2!");
     } else {
-        res.status(503).send("error");
+        res.status(500).send("error");
         console.log('error', countError++);
     }
 }
