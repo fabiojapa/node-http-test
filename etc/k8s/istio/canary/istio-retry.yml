@@ -1,36 +1,74 @@
 # https://istio.io/latest/docs/concepts/traffic-management/#retries
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: node-http-test-canary-ext
-spec:
-  hosts:
-  - "sakanaryistio.io"
-  gateways:
-  - node-http-test-canary-gateway
-  http:
-  - match:
-    - headers:
-        country:
-          exact: MX
-    route:
-    - destination:
-        host: node-http-test-canary
-        subset: canary
-        port:
-          number: 80
-    retries:
-      attempts: 7
-      perTryTimeout: 2s
-      retryOn: "5xx"
-      # https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
----
+
+
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   name: node-http-test-canary-ext
+# spec:
+#   hosts:
+#   - "sakanaryistio.io"
+#   gateways:
+#   - node-http-test-canary-gateway
+#   http:
+#   - match:
+#     - headers:
+#         country:
+#           exact: MX
+#     route:
+#     - destination:
+#         host: node-http-test-canary
+#         subset: canary
+#         port:
+#           number: 80
+#     retries:
+#       attempts: 7
+#       perTryTimeout: 2s
+#       retryOn: "5xx"
+#       # https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
+# ---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   name: node-http-test
+# spec:
+#   hosts:
+#   - "node-http-test"
+#   - "node-http-test.default.svc.cluster.local"
+#   http:
+#   - match:
+#     - headers:
+#         country:
+#           exact: MX
+#     route:
+#     - destination:
+#         host: node-http-test-canary
+#         subset: canary
+#         port:
+#           number: 80
+#     retries:
+#       attempts: 7
+#       perTryTimeout: 2s
+#       retryOn: "5xx"
+#       # https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
+#   - match:
+#     - uri:
+#         prefix: /
+#     route:
+#     - destination:
+#         host: node-http-test
+#         port:
+#           number: 80
+
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: node-http-test
 spec:
+  gateways:
+    - node-http-test
   hosts:
+  - "sakanaryistio.io"
   - "node-http-test"
   - "node-http-test.default.svc.cluster.local"
   http:
@@ -44,6 +82,13 @@ spec:
         subset: canary
         port:
           number: 80
+      weight: 60
+    - destination:
+        host: node-http-test
+        subset: prod
+        port:
+          number: 80
+      weight: 40
     retries:
       attempts: 7
       perTryTimeout: 2s
@@ -55,5 +100,6 @@ spec:
     route:
     - destination:
         host: node-http-test
+        subset: prod
         port:
           number: 80
