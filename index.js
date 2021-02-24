@@ -24,6 +24,11 @@ app.get("/", (req, res) => {
 
 app.get("/test", getTest);
 
+app.get("/ok", (req, res) => {
+    res.send("CANARY-Saka World 3.0x!");
+    console.log('ok', countOk++);
+});
+
 app.listen(port, () => console.log(`Example app listening on port port!`));
 
 console.log("Server running at http://127.0.0.1:3000/");

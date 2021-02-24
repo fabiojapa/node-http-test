@@ -19,7 +19,7 @@ istioctl dashboard jaeger
 
 
 # retry:
-1. Escalar
+1. Escalar em 2
 ```sh
 kubectl scale deployment/node-http-test-canary --replicas 2
 ```
@@ -47,12 +47,12 @@ curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: 
 
 
 # circuit break:
-1. Aplicar
+1. Escalar em 1
 ```sh
-kubectl apply -f etc/k8s/istio/canary/istio-circuit-break-max-connection.yml
+kubectl scale deployment/node-http-test-canary --replicas 1
 ```
 
-2. criar o pod cliet para chamadas de testes
+2. criar o pod client para chamadas de testes
 ```sh
 kubectl apply -f /home/sakamoto/opt/dev/istio-1.9.0/samples/httpbin/sample-client/fortio-deploy.yaml
 ```
@@ -62,27 +62,47 @@ kubectl apply -f /home/sakamoto/opt/dev/istio-1.9.0/samples/httpbin/sample-clien
  export FORTIO_POD=$(kubectl get pods -lapp=fortio -o 'jsonpath={.items[0].metadata.name}')
 ```
 
-4. executar o teste
+4. executar o teste e ver que todas bateram no pod
 ```sh
-kubectl exec -it $FORTIO_POD -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 40 -loglevel Warning http://node-http-test
+kubectl exec -it $FORTIO_POD -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 40 -loglevel Warning http://node-http-test-canary/ok
 ```
 
-5. ref:
+5. Aplicar
+```sh
+kubectl apply -f etc/k8s/istio/canary/istio-circuit-break-max-connection.yml
+```
+
+6. executar o teste e ver que todas bateram no pod
+```sh
+kubectl exec -it $FORTIO_POD -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 40 -loglevel Warning http://node-http-test-canary/ok
+```
+
+7. ref:
    
    https://istio.io/latest/docs/tasks/traffic-management/circuit-breaking/
 
 # circuit break: pool-ejection
-1. Aplicar
+1. chamar pelo postman e ver erros
+```sh
+for i in {1..30}; do curl --header "country: MX" http://sakanaryistio.io/test ; done
+```
+
+2. Aplicar
 ```sh
 kubectl apply -f etc/k8s/istio/canary/istio-circuit-break-pool-ejection.yml
 ```
 
-2. chamar pelo postman 
+3. chamar pelo postman e mostrar pool-ejection
 ```sh
-curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX'
+for i in {1..30}; do curl --header "country: MX" http://sakanaryistio.io/test ; done
 ```
 
-3. ref:
+4. aguardar 1min e chamar pelo postman e mostrar que voltou a chamar ms
+```sh
+for i in {1..30}; do curl --header "country: MX" http://sakanaryistio.io/test ; done
+```
+
+5. ref:
 
     https://istio.io/latest/docs/tasks/traffic-management/circuit-breaking/
 
