@@ -78,3 +78,9 @@ curl --location --request GET 'http://sakanaryistio.io' --header 'country: MX'
 
 curl --header "country: MX" http://node-http-test
 ```
+
+
+## ref:
+    https://docs.flagger.app/install/flagger-install-on-kubernetes
+    https://docs.flagger.app/tutorials/istio-progressive-delivery
+    https://flagger.app/intro/faq.html
