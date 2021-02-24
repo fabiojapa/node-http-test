@@ -41,14 +41,16 @@ helm upgrade -i flagger-grafana flagger/grafana \
 --namespace=istio-system \
 --set url=http://prometheus:9090 \
 --set user=admin \
---set password=changeme
+--set password=admin
 ```
 
 5. Access Grafana
 ```sh
 kubectl -n istio-system port-forward svc/flagger-grafana 3000:80
 ```
+    http://localhost:3000/d/flagger-appmesh/appmesh-canary?orgId=1&refresh=10s
     http://localhost:3000/d/flagger-istio/istio-canary
+    http://localhost:3000/d/flagger-envoy/envoy-canary?orgId=1&refresh=10s
 
     https://medium.com/expedia-group-tech/flagger-monitor-your-canary-deployments-with-grafana-21b9dd58b10e
 
@@ -64,16 +66,28 @@ kubectl apply -f etc/k8s/istio/canary/canary.yml
 
 8.  Update image deployment
 ```sh
-kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:2.0.1
+kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:3.0.1
 ```
 
 9. Chamar pelo postman 
 ```sh
-curl --location --request GET 'http://sakanaryistio.io' --header 'country: MX'
+for i in $(seq 1 10); do curl --location --request GET 'http://sakanaryistio.io' --header 'country: MX' ; done
 
-curl --header "country: MX" http://node-http-test
+for i in $(seq 1 10); do curl --header "country: MX" http://node-http-test ; done
+
 ```
 
+10.  Simular Rollback Update image deployment
+```sh
+kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:4.0.0
+```
+9. Chamar pelo postman 
+```sh
+for i in $(seq 1 10); do curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX' ; done
+
+for i in $(seq 1 10); do curl --header "country: MX" http://node-http-test/test ; done
+
+```
 
 ## ref:
     https://docs.flagger.app/install/flagger-install-on-kubernetes

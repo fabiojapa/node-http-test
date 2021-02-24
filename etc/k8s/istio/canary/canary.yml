@@ -50,16 +50,16 @@ spec:
       - sakanaryistio.io
       - node-http-test
       - node-http-test.default.svc.cluster.local
-    trafficPolicy:
-      outlierDetection:
-        consecutiveErrors: 1
-        interval: 1s
-        baseEjectionTime: 30s
-        maxEjectionPercent: 100
-    retries:
-      attempts: 7
-      perTryTimeout: 2s
-      retryOn: "5xx"
+    # trafficPolicy:
+    #   outlierDetection:
+    #     consecutiveErrors: 1
+    #     interval: 1s
+    #     baseEjectionTime: 30s
+    #     maxEjectionPercent: 100
+    # retries:
+    #   attempts: 7
+    #   perTryTimeout: 2s
+    #   retryOn: "5xx"
   analysis:
     # schedule interval (default 60s)
     interval: 1m
