@@ -57,52 +57,52 @@ spec:
       targetPort: 3000
       protocol: TCP
 
----
+# ---
 
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: node-http-test-canary-gateway
-spec:
-  selector:
-    istio: ingressgateway # use istio default controller
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "sakanaryistio.io"
-    - "node-http-test.default.svc.cluster.local"
+# apiVersion: networking.istio.io/v1alpha3
+# kind: Gateway
+# metadata:
+#   name: node-http-test-canary-gateway
+# spec:
+#   selector:
+#     istio: ingressgateway # use istio default controller
+#   servers:
+#   - port:
+#       number: 80
+#       name: http
+#       protocol: HTTP
+#     hosts:
+#     - "sakanaryistio.io"
+#     - "node-http-test.default.svc.cluster.local"
 
----
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: node-http-test-canary-ext
-spec:
-  hosts:
-  - "sakanaryistio.io"
-  gateways:
-  - node-http-test-canary-gateway
-  http:
-  - match:
-    - headers:
-        country:
-          exact: MX
-    route:
-    - destination:
-        host: node-http-test-canary
-        subset: canary
-        port:
-          number: 80
-      weight: 50
-    - destination:
-        host: node-http-test
-        subset: prod
-        port:
-          number: 80
-      weight: 50
+# ---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   name: node-http-test-canary-ext
+# spec:
+#   hosts:
+#   - "sakanaryistio.io"
+#   gateways:
+#   - node-http-test-canary-gateway
+#   http:
+#   - match:
+#     - headers:
+#         country:
+#           exact: MX
+#     route:
+#     - destination:
+#         host: node-http-test-canary
+#         subset: canary
+#         port:
+#           number: 80
+#       weight: 50
+#     - destination:
+#         host: node-http-test
+#         subset: prod
+#         port:
+#           number: 80
+#       weight: 50
 
 ---
 apiVersion: networking.istio.io/v1alpha3
@@ -110,7 +110,10 @@ kind: VirtualService
 metadata:
   name: node-http-test
 spec:
+  gateways:
+    - node-http-test
   hosts:
+  - "sakanaryistio.io"
   - "node-http-test"
   - "node-http-test.default.svc.cluster.local"
   http:
@@ -137,6 +140,7 @@ spec:
     route:
     - destination:
         host: node-http-test
+        subset: prod
         port:
           number: 80
 
@@ -144,9 +148,9 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: node-http-test-canary
+  name: node-http-test
 spec:
-  host: node-http-test-canary
+  host: node-http-test
   subsets:
   - name: prod
     labels:
