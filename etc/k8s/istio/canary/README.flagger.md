@@ -71,3 +71,10 @@ kubectl apply -f etc/k8s/istio/canary/canary.yml
 ```sh
 kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:2.0.1
 ```
+
+10. Chamar pelo postman 
+```sh
+curl --location --request GET 'http://sakanaryistio.io' --header 'country: MX'
+
+curl --header "country: MX" http://node-http-test
+```
