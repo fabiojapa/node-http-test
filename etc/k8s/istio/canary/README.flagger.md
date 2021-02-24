@@ -57,22 +57,17 @@ kubectl -n istio-system port-forward svc/flagger-grafana 3000:80
 kubectl apply -f etc/k8s/istio/prod/app.yml
 ```
 
-7. Create HPA
-```sh
-kubectl autoscale deployment node-http-test --cpu-percent=50 --min=1 --max=4
-```
-
-8. Create Canary Configuration
+7. Create Canary Configuration
 ```sh
 kubectl apply -f etc/k8s/istio/canary/canary.yml
 ```
 
-9.  Update image deployment
+8.  Update image deployment
 ```sh
 kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:2.0.1
 ```
 
-10. Chamar pelo postman 
+9. Chamar pelo postman 
 ```sh
 curl --location --request GET 'http://sakanaryistio.io' --header 'country: MX'
 
