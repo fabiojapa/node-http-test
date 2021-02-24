@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-http-test-deployment-canary
+  name: node-http-test-canary
 spec:
   replicas: 1
   selector:

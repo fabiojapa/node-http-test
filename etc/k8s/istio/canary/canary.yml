@@ -1,0 +1,85 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: node-http-test
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: node-http-test
+  minReplicas: 1
+  maxReplicas: 4
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          # scale up if usage is above
+          # 99% of the requested CPU (100m)
+          averageUtilization: 80
+---          
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: node-http-test
+spec:
+  # deployment reference
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: node-http-test
+  # the maximum time in seconds for the canary deployment
+  # to make progress before it is rollback (default 600s)
+  progressDeadlineSeconds: 60
+  # HPA reference (optional)
+  autoscalerRef:
+    apiVersion: autoscaling/v2beta2
+    kind: HorizontalPodAutoscaler
+    name: node-http-test
+  service:
+    # service port number
+    name: node-http-test
+    port: 80
+    targetPort: 3000
+    gateways:
+      - node-http-test.default.svc.cluster.local
+      - mesh
+    # Istio virtual service host names (optional)
+    hosts:
+      - sakanaryistio.io
+      - node-http-test
+      - node-http-test.default.svc.cluster.local
+    trafficPolicy:
+      outlierDetection:
+        consecutiveErrors: 1
+        interval: 1s
+        baseEjectionTime: 30s
+        maxEjectionPercent: 100
+    retries:
+      attempts: 7
+      perTryTimeout: 2s
+      retryOn: "5xx"
+  analysis:
+    # schedule interval (default 60s)
+    interval: 1m
+    # max number of failed metric checks before rollback
+    threshold: 5
+    # max traffic percentage routed to canary
+    # percentage (0-100)
+    maxWeight: 50
+    # canary increment step
+    # percentage (0-100)
+    stepWeight: 10
+    match:
+      - headers:
+          country:
+            regex: "MX"
+    metrics:
+    - name: request-success-rate
+      # minimum req success rate (non 5xx responses)
+      # percentage (0-100)
+      thresholdRange:
+        min: 99
+      interval: 1m
+  skipAnalysis: false

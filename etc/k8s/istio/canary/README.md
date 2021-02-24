@@ -1,5 +1,23 @@
 
 # ISTIO POC
+
+## Observability
+1. Kiali
+```sh
+kubectl apply -f /home/sakamoto/opt/dev/istio-1.9.0/samples/addons
+istioctl dashboard kiali
+```
+    https://istio.io/latest/docs/ops/integrations/kiali/
+    https://istio.io/latest/docs/setup/getting-started/#dashboard
+
+2. Jaeger
+```sh
+kubectl apply -f /home/sakamoto/opt/dev/istio-1.9.0/samples/addons
+istioctl dashboard jaeger
+```
+    https://istio.io/latest/docs/tasks/observability/distributed-tracing/jaeger/
+
+
 # retry:
 1. Aplicar
 ```sh
@@ -8,7 +26,7 @@ kubectl apply -f etc/k8s/istio/canary/istio-retry.yml
 
 1. Escalar
 ```sh
-kubectl scale deployment/node-http-test-deployment-canary --replicas 2
+kubectl scale deployment/node-http-test-canary --replicas 2
 ```
 
 3. Chamar pelo postman 
@@ -61,3 +79,5 @@ curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: 
 3. ref:
 
     https://istio.io/latest/docs/tasks/traffic-management/circuit-breaking/
+
+

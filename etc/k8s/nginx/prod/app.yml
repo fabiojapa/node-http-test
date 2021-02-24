@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-http-test-deployment
+  name: node-http-test
 spec:
   replicas: 1
   selector:
