@@ -10,7 +10,7 @@ function getRandomInt(max) {
 
 function getTest(req, res) {
     if (getRandomInt(5) === 0) {
-        res.send("Saka World 4.0x!");
+        res.send("CANARY-Saka World 3.0x!");
         console.log('ok', countOk++);
     } else {
         res.status(500).send("error");
@@ -19,7 +19,7 @@ function getTest(req, res) {
 }
 
 app.get("/", (req, res) => {
-    res.send("Saka World Get 4.0!");
+    res.send("CANARY-SAKA - Ola Mundo v3");
 });
 
 app.get("/test", getTest);

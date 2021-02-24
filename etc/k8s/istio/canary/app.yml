@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: node-http-test
-        image: fabiojapa/node-http-test:2.0.1
+        image: fabiojapa/node-http-test:3.0.0
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

@@ -19,22 +19,28 @@ istioctl dashboard jaeger
 
 
 # retry:
-1. Aplicar
-```sh
-kubectl apply -f etc/k8s/istio/canary/istio-retry.yml
-```
-
 1. Escalar
 ```sh
 kubectl scale deployment/node-http-test-canary --replicas 2
 ```
 
-3. Chamar pelo postman 
+2. Chamar pelo postman e mostrar erro
 ```sh
 curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX'
 ```
 
-4. ref: 
+3. Aplicar
+```sh
+kubectl apply -f etc/k8s/istio/canary/istio-retry.yml
+```
+
+4. Chamar pelo postman e mostrar retry
+```sh
+curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX'
+```
+
+
+5. ref: 
    
     https://istio.io/latest/docs/concepts/traffic-management/#retries
     https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
@@ -58,7 +64,7 @@ kubectl apply -f /home/sakamoto/opt/dev/istio-1.9.0/samples/httpbin/sample-clien
 
 4. executar o teste
 ```sh
-kubectl exec -it fortio-deploy-6dc9b4d7d9-qdw25 -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 40 -loglevel Warning http://node-http-test
+kubectl exec -it $FORTIO_POD -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 40 -loglevel Warning http://node-http-test
 ```
 
 5. ref:
