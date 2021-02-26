@@ -19,7 +19,7 @@ function getTest(req, res) {
 }
 
 app.get("/", (req, res) => {
-    res.send("CANARY-SAKA - Ola Mundo v4sss");
+    res.send("CANARY-SAKA - Ola Mundo v4xxxxxx");
 });
 
 app.get("/test", getTest);
