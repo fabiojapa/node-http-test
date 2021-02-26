@@ -27,7 +27,7 @@ app.get("/ok", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("CANARY-SAKA - Ola Mundo v5");
+    res.send("CANARY-SAKA - Ola MundoGET v5.1");
 });
 
 app.listen(port, () => console.log(`Example app listening on port port!`));
