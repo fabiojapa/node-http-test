@@ -56,7 +56,10 @@ kubectl -n istio-system port-forward svc/flagger-grafana 3000:80
 
 6. Deploy node-http-test
 ```sh
+kubectl delete -f etc/k8s/istio/canary/app.yml
 kubectl delete -f etc/k8s/istio/prod/app.yml
+
+
 kubectl apply -f etc/k8s/istio/prod/app.yml
 ```
 

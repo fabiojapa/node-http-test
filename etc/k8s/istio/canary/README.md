@@ -22,6 +22,7 @@ istioctl dashboard jaeger
 1. Escalar em 2
 ```sh
 kubectl apply -f etc/k8s/istio/canary/app.yml
+
 kubectl scale deployment/node-http-test-canary --replicas 2
 ```
 
