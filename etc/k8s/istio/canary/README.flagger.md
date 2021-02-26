@@ -56,6 +56,7 @@ kubectl -n istio-system port-forward svc/flagger-grafana 3000:80
 
 6. Deploy node-http-test
 ```sh
+kubectl delete -f etc/k8s/istio/prod/app.yml
 kubectl apply -f etc/k8s/istio/prod/app.yml
 ```
 
@@ -66,26 +67,26 @@ kubectl apply -f etc/k8s/istio/canary/canary.yml
 
 8.  Update image deployment
 ```sh
-kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:3.0.1
+kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:5.0.0
 ```
 
 9. Chamar pelo postman 
 ```sh
-for i in $(seq 1 10); do curl --location --request GET 'http://sakanaryistio.io' --header 'country: MX' ; done
+for i in $(seq 1 100); do curl --location --request GET 'http://sakanaryistio.io' --header 'country: MX' ; done
 
-for i in $(seq 1 10); do curl --header "country: MX" http://node-http-test ; done
+for i in $(seq 1 100); do curl --header "country: MX" http://node-http-test ; done
 
 ```
 
 10.  Simular Rollback Update image deployment
 ```sh
-kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:4.0.0
+kubectl set image deployment/node-http-test node-http-test=fabiojapa/node-http-test:5.0.1
 ```
 9. Chamar pelo postman 
 ```sh
-for i in $(seq 1 10); do curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX' ; done
+for i in $(seq 1 100); do curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX' ; done
 
-for i in $(seq 1 10); do curl --header "country: MX" http://node-http-test/test ; done
+for i in $(seq 1 100); do curl --header "country: MX" http://node-http-test/test ; done
 
 ```
 

@@ -10,7 +10,7 @@ function getRandomInt(max) {
 
 function getTest(req, res) {
     if (getRandomInt(5) === 0) {
-        res.send("CANARY-Saka World 4.0x!");
+        res.send("CANARY-Saka World 5.0x!");
         console.log('ok', countOk++);
     } else {
         res.status(500).send("error");
@@ -18,15 +18,16 @@ function getTest(req, res) {
     }
 }
 
-app.get("/", (req, res) => {
-    res.send("CANARY-SAKA - Ola Mundo v4xxxxxx");
-});
 
 app.get("/test", getTest);
 
 app.get("/ok", (req, res) => {
-    res.send("CANARY-Saka World 4.0x!");
+    res.send("CANARY-Saka World 5.0x!");
     console.log('ok', countOk++);
+});
+
+app.get("/", (req, res) => {
+    res.send("CANARY-SAKA - Ola Mundo v5");
 });
 
 app.listen(port, () => console.log(`Example app listening on port port!`));

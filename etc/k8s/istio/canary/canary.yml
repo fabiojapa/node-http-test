@@ -50,27 +50,17 @@ spec:
       - sakanaryistio.io
       - node-http-test
       - node-http-test.default.svc.cluster.local
-    # trafficPolicy:
-    #   outlierDetection:
-    #     consecutiveErrors: 1
-    #     interval: 1s
-    #     baseEjectionTime: 30s
-    #     maxEjectionPercent: 100
-    # retries:
-    #   attempts: 7
-    #   perTryTimeout: 2s
-    #   retryOn: "5xx"
   analysis:
-    # schedule interval (default 60s)
-    interval: 1m
-    # max number of failed metric checks before rollback
-    threshold: 5
-    # max traffic percentage routed to canary
-    # percentage (0-100)
-    maxWeight: 50
     # canary increment step
     # percentage (0-100)
     stepWeight: 10
+    # schedule interval (default 60s)
+    interval: 30s
+    # max traffic percentage routed to canary
+    # percentage (0-100)
+    maxWeight: 30
+    # max number of failed metric checks before rollback
+    threshold: 5
     match:
       - headers:
           country:
@@ -81,5 +71,5 @@ spec:
       # percentage (0-100)
       thresholdRange:
         min: 99
-      interval: 1m
+      interval: 30s
   skipAnalysis: false
