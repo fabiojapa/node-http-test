@@ -21,12 +21,13 @@ istioctl dashboard jaeger
 # retry:
 1. Escalar em 2
 ```sh
+kubectl apply -f etc/k8s/istio/canary/app.yml
 kubectl scale deployment/node-http-test-canary --replicas 2
 ```
 
 2. Chamar pelo postman e mostrar erro
 ```sh
-curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX'
+ for i in $(seq 1 100); do curl --location --request GET 'http://sakanaryistio.io/test' --header 'country: MX'; echo "" ; done
 ```
 
 3. Aplicar
@@ -72,7 +73,7 @@ kubectl exec -it $FORTIO_POD -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 4
 kubectl apply -f etc/k8s/istio/canary/istio-circuit-break-max-connection.yml
 ```
 
-6. executar o teste e ver que todas bateram no pod
+6. executar o teste e ver que o circuit break abriu
 ```sh
 kubectl exec -it $FORTIO_POD -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 40 -loglevel Warning http://node-http-test-canary/ok
 ```
@@ -84,7 +85,9 @@ kubectl exec -it $FORTIO_POD -c fortio --  /usr/bin/fortio load -c 3 -qps 0 -n 4
 # circuit break: pool-ejection
 1. chamar pelo postman e ver erros
 ```sh
-for i in {1..30}; do curl --header "country: MX" http://sakanaryistio.io/test ; done
+kubectl apply -f etc/k8s/istio/canary/app.yml
+
+for i in {1..30}; do curl --header "country: MX" http://sakanaryistio.io/test ; echo "" ; done
 ```
 
 2. Aplicar
@@ -94,7 +97,7 @@ kubectl apply -f etc/k8s/istio/canary/istio-circuit-break-pool-ejection.yml
 
 3. chamar pelo postman e mostrar pool-ejection
 ```sh
-for i in {1..30}; do curl --header "country: MX" http://sakanaryistio.io/test ; done
+for i in {1..30}; do curl --header "country: MX" http://sakanaryistio.io/test ; echo "" ; done
 ```
 
 4. aguardar 1min e chamar pelo postman e mostrar que voltou a chamar ms
