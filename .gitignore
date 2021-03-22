@@ -4,3 +4,5 @@ node_modules/
 model.temp.python.js
 model.temp.js
 model.temp.python.test.js
+nsqa-ingress-tls.crt
+nsqa-ingress-tls.key
