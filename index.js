@@ -1,35 +1,7 @@
-const express = require("express");
-const app = express();
-const port = 3000;
-let countOk = 0;
-let countError = 0;
+var http = require('http');
+http.createServer(function (request, response) {
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.end('CANARY-SAKA - Hellooo v34\n');
+}).listen(3000);
 
-function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
-}
-
-function getTest(req, res) {
-    if (getRandomInt(5) === 0) {
-        res.send("CANARY-Saka World 5.0x!\n");
-        console.log('ok', countOk++);
-    } else {
-        res.status(500).send("error");
-        console.log('error', countError++);
-    }
-}
-
-
-app.get("/test", getTest);
-
-app.get("/ok", (req, res) => {
-    res.send("CANARY-Saka World 5.0x!\n");
-    console.log('ok', countOk++);
-});
-
-app.get("/", (req, res) => {
-    res.send("CANARY-SAKA - Ola MundoGET v5.1\n");
-});
-
-app.listen(port, () => console.log(`Example app listening on port port!`));
-
-console.log("Server running at http://127.0.0.1:3000/");
+console.log('Server running at http://127.0.0.1:3000/');
